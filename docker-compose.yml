@@ -1,0 +1,8 @@
+services:
+  app: 
+    build:
+      dockerfile: ./Dockerfile
+      context: ./
+    command: python ./app/main.py
+    volumes:
+      - .:/app
