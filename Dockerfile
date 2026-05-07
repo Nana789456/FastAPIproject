@@ -1,22 +1,14 @@
-FROM python:3.10.6-slim-bullseye
+FROM python:3.12-bookworm
 
 WORKDIR /app
 
-# COPY . .
+RUN apt-get update && apt-get install -y netcat-openbsd && rm -rf /var/lib/apt/lists/*
 
-# CMD ["python", "main.py"]
+RUN pip install --upgrade pip "poetry==1.8.2"
+RUN poetry config virtualenvs.create false --local
 
-# RUN apt-get update && apt-get install -y netcat
+COPY poetry.lock pyproject.toml ./
 
-# RUN pip install --upgrade pip "poetry==1.5.1"
-# RUN poetry config virtualenvs.create false --local
+RUN poetry install
 
-# COPY poetry.lock pyproject.toml ./
-
-# RUN poetry install --no-ansi --only main
-
-# COPY . .
-
-# RUN chmod +x ./prestart.sh
-# ENTRYPOINT ["./prestart.sh"]
-# CMD ["python", "music_events_bot.py"]
+COPY . .
