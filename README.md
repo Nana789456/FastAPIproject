@@ -66,3 +66,7 @@ curl -X 'GET' \
   'http://127.0.0.1:8000/v1/creativity/painting' \
   -H 'accept: application/json'
 ```
+
+#ДЗ
+- Реализовать ручку:
+    - `GET /creativity/poetry` (ручка для получения N актуальных курсов по поэтическому искусству)
