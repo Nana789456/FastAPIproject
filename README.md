@@ -28,11 +28,17 @@
 - Создать .venv через
 ```bash
 python3.12 -m venv .venv
+py -m venv .venv
 ```
 - Активируем окржение (команда дя windows)
 ```bash
 source .venv/Scripts/activate
 ```
+Для проверки версии Питон 
+```bash
+python -V
+```
+
 - Устанавливаем poetry
 ```bash
 pip install poetry==1.8.2
@@ -44,4 +50,19 @@ poetry lock
 - Устанавливаем зависимости проекта
 ```bash
 poetry install
+```
+Запустить сервис через команду
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+Для проверки работы сервиса выполнить
+```bash
+http://127.0.0.1:8000/docs
+```
+
+Для проверки работы ручки можно выполнить curl запрос
+```bash
+curl -X 'GET' \
+  'http://127.0.0.1:8000/v1/creativity/painting' \
+  -H 'accept: application/json'
 ```
