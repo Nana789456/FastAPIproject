@@ -23,8 +23,26 @@
 5)  Аудиозаписи
 6)  Контакты
 
-# ДЗ
-- Установить python3.12
+# Схема Архитектуры БД
+![alt text](static/2026-05-14_10-16.png)
+
+# Настройка среды
+## Версионирование Python на Windows
+1. Установить pyenv-win. Выполнить в PowerShell: 
+```bash
+Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/pyenv-win/pyenv-win/master/pyenv-win/install-pyenv-win.ps1" -OutFile "./install-pyenv-win.ps1"; &"./install-pyenv-win.ps1"
+```
+2. Перезапустить PowerShell
+3. Установить Python нужной версии:
+```bash
+pyenv install 3.12.10
+```
+4. Выполнить в терминале VS code:
+```bash
+pyenv shell 3.12.10
+```
+
+## Настройка окружения
 - Создать .venv через
 ```bash
 python3.12 -m venv .venv
@@ -33,6 +51,7 @@ py -m venv .venv
 - Активируем окржение (команда дя windows)
 ```bash
 source .venv/Scripts/activate
+# или .venv\Scripts\activate
 ```
 Для проверки версии Питон 
 ```bash
@@ -69,4 +88,4 @@ curl -X 'GET' \
 
 #ДЗ
 - Реализовать ручку:
-    - `GET /creativity/literature` (ручка для получения N актуальных курсов по литературе)
+    - `GET /creativity/poetry` (ручка для получения N актуальных курсов по поэтическому искусству)
