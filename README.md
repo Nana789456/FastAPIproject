@@ -89,3 +89,19 @@ curl -X 'GET' \
 #ДЗ
 - Реализовать ручку:
     - `GET /creativity/poetry` (ручка для получения N актуальных курсов по поэтическому искусству)
+
+
+# Настройка миграций
+0. Убедиться что создан .env с необходимыми переменными для конфигурации БД (с DATABASE_URL)
+1. Выполнить alembic init alembic
+2. Настроить alembic/env.py файл
+3. Сгенерировать миграцию:
+```bash
+alembic revision --autogenerate -m "migration name"
+```
+4. Применить миграцию
+```bash
+alembic upgrade head
+```
+Документация:
+https://alembic.sqlalchemy.org/en/latest/tutorial.html
