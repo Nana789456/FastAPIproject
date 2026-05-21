@@ -93,15 +93,23 @@ curl -X 'GET' \
 
 # Настройка миграций
 0. Убедиться что создан .env с необходимыми переменными для конфигурации БД (с DATABASE_URL)
-1. Выполнить alembic init alembic
+1. Выполнить
+```bash
+alembic init alembic
+```
 2. Настроить alembic/env.py файл
 3. Сгенерировать миграцию:
 ```bash
 alembic revision --autogenerate -m "migration name"
 ```
-4. Применить миграцию
+4. Применить ВСЕ миграции
 ```bash
 alembic upgrade head
 ```
 Документация:
 https://alembic.sqlalchemy.org/en/latest/tutorial.html
+
+4. Откатиться на одну миграцию назад
+```bash
+alembic downgrade -1
+```
