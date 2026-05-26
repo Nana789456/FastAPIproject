@@ -11,6 +11,7 @@ class Course(Base):
     author = Column(String(255), index=True, nullable=False)
     duration = Column(Integer, nullable=True)
     price = Column(Float, nullable=True)
+    discount = Column(Integer, nullable=True)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
