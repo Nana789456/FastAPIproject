@@ -18,3 +18,11 @@ class Course(Base):
     
     def __repr__(self):
         return f"<Course(id={self.id}, name='{self.name}')>"
+    
+class Video(Base):
+    __tablename__ = 'video'
+    
+    id = Column(Integer, primary_key=True)
+    title = Column(String(100))
+    author = Column(String(100))
+    file_path = Column(String(255), nullable=False)  # Path to the MP3 on disk

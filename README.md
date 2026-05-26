@@ -113,3 +113,8 @@ https://alembic.sqlalchemy.org/en/latest/tutorial.html
 ```bash
 alembic downgrade -1
 ```
+
+ДЗ:
+- Повторить типы связей между таблицамии в реляционных базах данных
+- Попробовать связть таблицы course и video (*)
+- Применить изменения на БД (накатить миграции)
