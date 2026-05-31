@@ -1,15 +1,20 @@
 from pydantic import BaseModel, Field, field_validator
+    
 
+# --- Схема для запроса от клиента (тело POST-запроса) ---
+class CourseCreate(BaseModel):
+    name: str = Field(..., example="Название курса")
+    author: str = Field(..., example="Автор курса")
+    duration: int = Field(..., example=120, description="Длительность в минутах")
+    price: float = Field(..., example=4990.00)
+    discount: int = Field(0, example=10, description="Скидка в процентах")
 
-class PaintingResponseGet(BaseModel):
-    name: str = Field(..., json_schema_extra={"example": "Название"})
-    author: str = Field(..., json_schema_extra={"example": "Автор"})
-    duration: int = Field(..., json_schema_extra={"example": "Продолжительность в часах"})
-    price: float = Field(..., json_schema_extra={"example": "Стоимость"})
+# --- Схема для ответа сервера ---
+class CourseResponse(BaseModel):
+    name: str
+    author: str
+    duration: int
+    price: float
+    discount: int
 
-
-class LiteratureResponseGet(BaseModel):
-    name: str = Field(..., json_schema_extra={"example": "Название"})
-    author: str = Field(..., json_schema_extra={"example": "Автор"})
-    duration: int = Field(..., json_schema_extra={"example": "Продолжительность в часах"})
-    price: float = Field(..., json_schema_extra={"example": "Стоимость"})
+    model_config = {"from_attributes": True}
