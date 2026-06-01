@@ -24,7 +24,7 @@ class Course(Base):
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
-    # Обратная связь (один курс содержит много видео)
+    # Обратная связь (один курс содержит много видео), только для ORM (нет в БД)
     videos: Mapped[List["Video"]] = relationship(back_populates="course")
 
     def __repr__(self):
@@ -38,6 +38,7 @@ class Video(Base):
     author = Column(String(100))
     file_path = Column(String(255), nullable=False)  # Path to the MP3 on disk
 
+    # Реальная колонка, которая связана с course (есть в БД)
     course_id: Mapped[int] = mapped_column(ForeignKey("course.id"))
-    # Прямая связь: одно видео принадлежит одному курсу
+    # Прямая связь: одно видео принадлежит одному курсу, только для ORM (нет в БД)
     course: Mapped["Course"] = relationship(back_populates="videos")

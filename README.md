@@ -114,5 +114,20 @@ https://alembic.sqlalchemy.org/en/latest/tutorial.html
 alembic downgrade -1
 ```
 
+# Запуск сервиса
+1. Выполнить в терминале
+В докере:
+```bash
+docker compose up app --build
+```
+
+Вне докера:
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+2. Перейти в интерактивную документацию swagger
+http://127.0.0.1:8000/docs
+
 ДЗ:
 - Написать функционал для создания Video
