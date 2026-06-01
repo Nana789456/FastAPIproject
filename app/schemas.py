@@ -6,7 +6,7 @@ class CourseCreate(BaseModel):
     name: str = Field(..., example="Название курса")
     author: str = Field(..., example="Автор курса")
     duration: int = Field(..., example=120, description="Длительность в минутах")
-    price: float = Field(..., example=4990.00)
+    price: float = Field(..., example=4990.00, description="Стоимость")
     discount: int = Field(0, example=10, description="Скидка в процентах")
 
 # --- Схема для ответа сервера ---
