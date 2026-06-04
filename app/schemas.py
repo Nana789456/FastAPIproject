@@ -18,3 +18,16 @@ class CourseResponse(BaseModel):
     discount: int
 
     model_config = {"from_attributes": True}
+
+class VideoCreate(BaseModel):
+    title: str = Field(..., example="Название видео")
+    author: str = Field(..., example="Автор видео")
+    course: str = Field(..., example="Название курса")
+
+class VideoResponse(BaseModel):
+    title: str
+    author: str
+    course: str
+    course_id: int
+
+    model_config = {"from_attributes": True}
