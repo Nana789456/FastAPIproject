@@ -12,4 +12,4 @@ router = APIRouter()
 async def create(
     obj_in: VideoCreate,
 ):
-    return crud.create_course(SessionLocal, obj_in)
+    return crud.create_video(SessionLocal, obj_in)
