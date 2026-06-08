@@ -27,7 +27,6 @@ class VideoCreate(BaseModel):
 class VideoResponse(BaseModel):
     title: str
     author: str
-    course: str
     course_id: int
 
     model_config = {"from_attributes": True}
