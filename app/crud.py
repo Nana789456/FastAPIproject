@@ -70,6 +70,34 @@ def get_last_courses(session: sessionmaker[Session], number: int):
         return names_str
     
 
+def create_video(session: sessionmaker[Session], obj_in: VideoCreate):
+    with session() as s:
+
+        # Достаём название курса из входных данных
+        course_name = obj_in.course
+
+        # Получение курса по его названию
+        stmt = select(Course).where(Course.name == course_name)
+        # execute - выполнение запроса stmt, scalar_one_or_none - получение одного экземпляра модеои ИЛИ None 
+        course: Course = s.execute(stmt).scalar_one_or_none() 
+
+        if not course:
+            raise HTTPException(
+               status_code = 404,
+               detail = 'Курс с таким названием не найден, поэтому создать видео нельзя'
+            )
+
+        obj = Video(
+            title=obj_in.title,
+            author=obj_in.author,
+            file_path=f"{course_name}_{time()}.mp3",
+            course_id=course.id,
+        )
+        s.add(obj)
+        s.commit()
+        s.refresh(obj)
+        return obj
+
 def get_video(session: sessionmaker[Session], video_name: str):
     with session() as s:
         stmt = select(Video).where(Video.title == video_name)
