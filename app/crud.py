@@ -184,9 +184,9 @@ def get_last_video(session: sessionmaker[Session], number: int):
 
         if not objs:
             raise HTTPException(
-                status_code=404,
-                detail="В базе НЕТ курсов",
-            )
+            status_code = 404,
+            detail = 'В базе НЕТ видео'
+        )
 
         titles_str = objs[0].title
         if len(objs) > 1:
