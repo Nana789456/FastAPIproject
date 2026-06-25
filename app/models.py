@@ -36,7 +36,7 @@ class Video(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String(100))
     author = Column(String(100))
-    file_path = Column(String(255), nullable=False)  # Path to the MP3 on disk
+    file_path = Column(String(255), nullable=False)  # Путь к файлу видео на диске
 
     # Реальная колонка, которая связана с course (есть в БД)
     course_id: Mapped[int] = mapped_column(ForeignKey("course.id"))

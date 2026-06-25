@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
     
 
 # --- Схема для запроса от клиента (тело POST-запроса) ---
@@ -19,14 +19,10 @@ class CourseResponse(BaseModel):
 
     model_config = {"from_attributes": True}
 
-class VideoCreate(BaseModel):
-    title: str = Field(..., example="Название видео")
-    author: str = Field(..., example="Автор видео")
-    course: str = Field(..., example="Название курса")
-
 class VideoResponse(BaseModel):
     title: str
     author: str
     course_id: int
+    file_path: str
 
     model_config = {"from_attributes": True}
