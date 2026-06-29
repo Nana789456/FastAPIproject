@@ -29,6 +29,11 @@ class UnitOfWork:
             raise RuntimeError("Сессия UoW не инициализирована")
         self.session.commit()
 
+    def flush(self):
+        if self.session is None:
+            raise RuntimeError("Сессия UoW не инициализирована")
+        self.session.flush()
+
     def rollback(self):
         if self.session is None:
             raise RuntimeError("Сессия UoW не инициализирована")

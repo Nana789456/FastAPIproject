@@ -16,6 +16,7 @@ class CourseService:
                     raise RuntimeError("UoW не инициализирован")
                 course = Course(**obj_in.model_dump())
                 uow.courses.add(course)
+                uow.flush()
                 uow.commit()
                 uow.session.refresh(course)
                 return course
