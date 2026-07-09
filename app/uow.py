@@ -3,7 +3,7 @@ from typing import Callable
 from sqlalchemy.orm import Session
 
 from app.database import SessionLocal
-from app.repositories import CourseRepository
+from app.repositories import CourseRepository, VideoRepository
 
 
 class UnitOfWork:
@@ -11,10 +11,12 @@ class UnitOfWork:
         self.session_factory = session_factory
         self.session: Session | None = None
         self.courses: CourseRepository | None = None
+        self.video: VideoRepository | None = None
 
     def __enter__(self):
         self.session = self.session_factory()
         self.courses = CourseRepository(self.session)
+        self.video = VideoRepository(self.session)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):

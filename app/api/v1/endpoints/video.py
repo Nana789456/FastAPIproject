@@ -1,6 +1,7 @@
 from fastapi import APIRouter, File, Form, Query, UploadFile, status
 
 from app.schemas import VideoResponse
+from app.services import VideoService
 from app.database import SessionLocal
 from app import crud
 
@@ -8,6 +9,7 @@ from typing import Annotated
 
 
 router = APIRouter()
+video_service = VideoService()
 
 
 @router.post("/", response_model=VideoResponse, status_code=status.HTTP_201_CREATED)
@@ -17,9 +19,9 @@ async def create(
     course: Annotated[str, Form(...)],
     file: Annotated[UploadFile, File(...)],
 ):
-    return crud.create_video(SessionLocal, title, author, course, file)
+    return video_service.create(title, author, course, file)
 
-
+"""
 @router.post("/upload/", response_model=VideoResponse, status_code=status.HTTP_200_OK)
 async def upload(
     video_name: Annotated[str, Form(...)],
@@ -49,3 +51,4 @@ async def get_last(
     number: Annotated[int, Query(gt=0, description="Кол-во видео")] = 5,
 ):
     return crud.get_last_video(SessionLocal, number)
+"""
