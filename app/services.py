@@ -1,7 +1,8 @@
-from fastapi import HTTPException, status
+from fastapi import HTTPException, UploadFile, status
+from fastapi.responses import FileResponse
 from sqlalchemy.exc import IntegrityError
 
-from app.crud import _store_video_file
+from app.crud import _delete_file, _store_video_file, build_video_file_response
 from app.models import Course, Video
 from app.uow import UnitOfWork
 
@@ -106,33 +107,65 @@ class VideoService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Необработанная ошибка: {e}",
             )
-"""
-    def get_course(self, course_name: str):
-        with self.uow_factory() as uow:
-            if uow.courses is None:
-                raise RuntimeError("UoW не инициализирован")
-            course = uow.courses.get_by_name(course_name)
 
-            if not course:
+    def upload(self, video_name: str, file: UploadFile):
+        try:
+            with self.uow_factory() as uow:
+                if uow.video is None or uow.session is None:
+                    raise RuntimeError("UoW не инициализирован")
+
+                video = uow.video.get_by_title(video_name)
+                if not video:
+                    raise HTTPException(
+                        status_code=status.HTTP_404_NOT_FOUND,
+                        detail="Видео с таким названием не найдено",
+                    )
+
+                old_file_path = video.file_path
+                video.file_path = _store_video_file(file)
+
+                uow.commit()
+                uow.session.refresh(video)
+
+            _delete_file(old_file_path)
+            return video
+        except HTTPException:
+            raise
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Необработанная ошибка: {e}",
+            )
+
+    def get(self, video_name: str) -> Video:
+        with self.uow_factory() as uow:
+            if uow.video is None:
+                raise RuntimeError("UoW не инициализирован")
+            video = uow.video.get_by_title(video_name)
+
+            if not video:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
-                    detail="Курс с таким названием не найден",
+                    detail="Видео с таким названием не найдено",
                 )
 
-            return course
+            return video
 
-    def get_last_courses(self, number: int):
+    def get_file(self, video_name: str, download: bool = False) -> FileResponse:
+        video = self.get(video_name)
+        return build_video_file_response(video, download=download)
+
+    def get_last(self, number: int):
         with self.uow_factory() as uow:
-            if uow.courses is None:
+            if uow.video is None:
                 raise RuntimeError("UoW не инициализирован")
-            courses = uow.courses.list_last(number)
+            videos = uow.video.list_last(number)
 
-            if not courses:
+            if not videos:
                 raise HTTPException(
-                    status_code=404,
-                    detail="В базе НЕТ курсов",
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="В базе НЕТ видео",
                 )
 
-            names = [course.name for course in courses]
-            return ", ".join(names)
-"""
+            titles = [video.title for video in videos]
+            return ", ".join(titles)
