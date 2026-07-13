@@ -9,11 +9,12 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.models import Course, Video
 
-SUPPORTED_VIDEO_EXTENSIONS = {".mp4", ".mkv", ".mov"}
+SUPPORTED_VIDEO_EXTENSIONS = {".mp4", ".mkv", ".mov", ".webm"}
 SUPPORTED_VIDEO_MEDIA_TYPES = {
     ".mp4": "video/mp4",
     ".mkv": "video/x-matroska",
     ".mov": "video/quicktime",
+    ".webm": "video/webm",
 }
 
 
