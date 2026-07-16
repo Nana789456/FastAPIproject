@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, Float
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, Float, Text
 from app.database import Base
 from datetime import datetime, timezone
 
@@ -42,3 +42,14 @@ class Video(Base):
     course_id: Mapped[int] = mapped_column(ForeignKey("course.id"))
     # Прямая связь: одно видео принадлежит одному курсу, только для ORM (нет в БД)
     course: Mapped["Course"] = relationship(back_populates="videos")
+
+
+class User(Base):
+    __tablename__ = 'user'
+
+    id = Column(Integer, primary_key=True)
+    login = Column(String(30), unique=True, nullable=False)
+    password = Column(String(30), nullable=False)
+    name = Column(String(20))
+    surname = Column(String(20))
+    accessible_videos = Column(Text)

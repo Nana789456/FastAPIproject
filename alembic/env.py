@@ -12,7 +12,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from app.config import settings
 from app.database import Base
-from app.models import Course  # импортируем модели, чтобы они попали в metadata
+from app.models import Course, Video, User  # импортируем модели, чтобы они попали в metadata
 
 # объект конфигурации Alembic
 config = context.config
