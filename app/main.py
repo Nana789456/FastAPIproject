@@ -3,7 +3,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from app.api.v1.endpoints import course, video
+from app.api.v1.endpoints import course, video, user
 
 
 app = FastAPI(title="Course Warehouse")
@@ -14,3 +14,4 @@ app.mount("/media", StaticFiles(directory=media_dir), name="media")
 
 app.include_router(course.router, prefix="/v1/course", tags=["course"])
 app.include_router(video.router, prefix="/v1/video", tags=["video"])
+app.include_router(user.router, prefix="/v1/user", tags=["user"])
