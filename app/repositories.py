@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models import Course, Video
+from app.models import Course, Video, User
 
 
 class CourseRepository:
@@ -43,3 +43,16 @@ class VideoRepository:
             .limit(number)
             .all()
         )
+    
+class UserRepository:
+    def __init__(self, session: Session):
+        self.session = session
+
+    def add(self, obj: User) -> User:
+        self.session.add(obj)
+        return obj
+
+    def get_by_login(self, login: str) -> User | None:
+        stmt = select(User).where(User.login == login)
+        return self.session.execute(stmt).scalar_one_or_none()
+

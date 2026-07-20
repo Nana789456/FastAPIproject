@@ -3,7 +3,7 @@ from fastapi.responses import FileResponse
 from sqlalchemy.exc import IntegrityError
 
 from app.crud import _delete_file, _store_video_file, build_video_file_response
-from app.models import Course, Video
+from app.models import Course, Video, User
 from app.uow import UnitOfWork
 
 
@@ -169,3 +169,30 @@ class VideoService:
 
             titles = [video.title for video in videos]
             return ", ".join(titles)
+        
+class UserService:
+    def __init__(self, uow_factory=UnitOfWork):
+        self.uow_factory = uow_factory
+
+    def create(self, obj_in):
+        try:
+            with self.uow_factory() as uow:
+                if uow.user is None or uow.session is None:
+                    raise RuntimeError("UoW не инициализирован")
+                user = User(**obj_in.model_dump())
+                uow.user.add(user)
+                uow.commit()
+                uow.session.refresh(user)
+                return user
+        except HTTPException:
+            raise
+        except IntegrityError:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Такой пользователь уже есть",
+            )
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Необработанная ошибка: {e}",
+            )
