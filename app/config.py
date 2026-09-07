@@ -4,8 +4,12 @@ from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-    # Аутентификация
     database_url: str  # соответствует DATABASE_URL в .env
+
+    # Аутентификация (JWT)
+    secret_key: str  # соответствует SECRET_KEY в .env
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
 
     model_config = SettingsConfigDict(
         env_file='.env',

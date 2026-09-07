@@ -5,7 +5,8 @@ from sqlalchemy import select
 
 from app.crud import _delete_file, _store_video_file, build_video_file_response
 from app.models import Course, Video, User
-from app.security import hash_password
+from app.schemas import Token
+from app.security import create_access_token, hash_password, verify_password
 from app.uow import UnitOfWork
 
 
@@ -203,3 +204,19 @@ class UserService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Необработанная ошибка: {e}",
             )
+
+    def login(self, login: str, password: str) -> Token:
+        with self.uow_factory() as uow:
+            if uow.user is None:
+                raise RuntimeError("UoW не инициализирован")
+
+            user = uow.user.get_by_login(login)
+            if user is None or not verify_password(password, user.hashed_password):
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Неверный логин или пароль",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
+
+            access_token = create_access_token(subject=user.login)
+            return Token(access_token=access_token)
