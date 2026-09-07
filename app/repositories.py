@@ -31,8 +31,9 @@ class CourseRepository:
 
 class VideoRepository:
     def __init__(self, session: Session):
-        self.session = session
-
+            self.session = session
+    
+    
     def add(self, video: Video) -> Video:
         self.session.add(video)
         return video
@@ -40,6 +41,7 @@ class VideoRepository:
     def get_by_title(self, title: str) -> Video | None:
         stmt = select(Video).where(Video.title == title)
         return self.session.execute(stmt).scalar_one_or_none()
+
 
     def list_last(self, number: int) -> list[Video]:
         return (
@@ -49,10 +51,13 @@ class VideoRepository:
             .all()
         )
 
-    def get_introductory(self):
-        stmt = select(Video).where(...)  # здесь прописать условия поиска по слову "ознакомительное" 
-        return self.session.execute(stmt).scalars()
 
+    def get_introductory(self) -> list[Video]:
+        stmt = select(Video).where(
+            Video.title.contains('ознакомительное')
+        )
+        return self.session.execute(stmt).scalars().all()
+        
 
 class UserRepository:
     def __init__(self, session: Session):

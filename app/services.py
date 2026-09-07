@@ -6,6 +6,7 @@ from sqlalchemy import select
 from app.crud import _delete_file, _store_video_file, build_video_file_response
 from app.models import Course, Video, User
 from app.uow import UnitOfWork
+import json
 
 
 class CourseService:
@@ -181,13 +182,16 @@ class UserService:
                 if uow.user is None or uow.session is None:
                     raise RuntimeError("UoW не инициализирован")
 
-                videos = uow.video.get_introductory()
+                videos: list[Video] = uow.video.get_introductory()
 
                 # Прописать получение названий видео
-                videos_names = ...
+                videos_names = [video.title for video in videos]
+                videos_names = json.dumps([video.title for video in videos], ensure_ascii=False)
 
                 # Прописать передачу videos_names в User
-                user = User(**obj_in.model_dump()) # Подправить эту строку
+                user_data = obj_in.model_dump()   # преобразовывает из Джейсон строки в пайтон объект (словарь в данном случае)
+                user_data['accessible_videos'] = videos_names
+                user = User(**user_data) # Подправить эту строку
                 uow.user.add(user)
                 uow.commit()
                 uow.session.refresh(user)
