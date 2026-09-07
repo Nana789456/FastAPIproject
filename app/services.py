@@ -5,6 +5,7 @@ from sqlalchemy import select
 
 from app.crud import _delete_file, _store_video_file, build_video_file_response
 from app.models import Course, Video, User
+from app.security import hash_password
 from app.uow import UnitOfWork
 
 
@@ -181,13 +182,11 @@ class UserService:
                 if uow.user is None or uow.session is None:
                     raise RuntimeError("UoW не инициализирован")
 
-                videos = uow.video.get_introductory()
+                # TODO(accessible_videos): подставлять сюда названия ознакомительных
+                # видео через uow.video.get_introductory() — отдельная задача из README.
 
-                # Прописать получение названий видео
-                videos_names = ...
-
-                # Прописать передачу videos_names в User
-                user = User(**obj_in.model_dump()) # Подправить эту строку
+                user_data = obj_in.model_dump(exclude={"password"})
+                user = User(**user_data, hashed_password=hash_password(obj_in.password))
                 uow.user.add(user)
                 uow.commit()
                 uow.session.refresh(user)

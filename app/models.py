@@ -49,7 +49,7 @@ class User(Base):
 
     id = Column(Integer, primary_key=True)
     login = Column(String(30), unique=True, nullable=False)
-    password = Column(String(30), nullable=False)
+    hashed_password = Column(String(255), nullable=False)
     name = Column(String(20))
     surname = Column(String(20))
     accessible_videos = Column(Text)
