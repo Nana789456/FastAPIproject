@@ -8,6 +8,7 @@ from app.models import Course, Video, User
 from app.schemas import Token
 from app.security import create_access_token, hash_password, verify_password
 from app.uow import UnitOfWork
+import json
 
 
 class CourseService:
@@ -183,10 +184,11 @@ class UserService:
                 if uow.user is None or uow.session is None:
                     raise RuntimeError("UoW не инициализирован")
 
-                # TODO(accessible_videos): подставлять сюда названия ознакомительных
-                # видео через uow.video.get_introductory() — отдельная задача из README.
+                videos: list[Video] = uow.video.get_introductory()
+                videos_names = json.dumps([video.title for video in videos], ensure_ascii=False)
 
                 user_data = obj_in.model_dump(exclude={"password"})
+                user_data["accessible_videos"] = videos_names
                 user = User(**user_data, hashed_password=hash_password(obj_in.password))
                 uow.user.add(user)
                 uow.commit()
