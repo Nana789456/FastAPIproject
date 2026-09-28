@@ -143,6 +143,15 @@ alembic downgrade -1
 ```
 
 # Запуск сервиса
+0. **Применить миграции** — обязательно после каждого `git pull`, в котором появились новые файлы в `alembic/versions/` (например, таблица `refresh_token` для refresh-токенов). Иначе ручки будут падать с ошибкой вида `no such table: refresh_token`.
+```bash
+alembic upgrade head
+```
+Проверить, что БД на последней миграции (должно быть `(head)`):
+```bash
+alembic current
+```
+
 1. Выполнить в терминале
 В докере:
 ```bash
