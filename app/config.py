@@ -9,7 +9,10 @@ class Settings(BaseSettings):
     # Аутентификация (JWT)
     secret_key: str  # соответствует SECRET_KEY в .env
     algorithm: str = "HS256"
-    access_token_expire_minutes: int = 30
+    access_token_expire_minutes: int = 15
+    refresh_token_expire_days: int = 7
+    # На проде за HTTPS — true; false нужен только для локального HTTP не на localhost
+    refresh_cookie_secure: bool = True
 
     model_config = SettingsConfigDict(
         env_file='.env',
