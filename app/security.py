@@ -1,3 +1,5 @@
+import hashlib
+import secrets
 from datetime import datetime, timedelta, timezone
 
 import bcrypt
@@ -29,3 +31,13 @@ def create_access_token(subject: str) -> str:
 
 def decode_access_token(token: str) -> dict:
     return jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
+
+
+def create_refresh_token() -> str:
+    # Непрозрачная случайная строка, а не JWT: валидность всё равно проверяется по БД
+    return secrets.token_urlsafe(32)
+
+
+def hash_refresh_token(token: str) -> str:
+    # bcrypt не нужен: у токена 256 бит энтропии, перебор бессмысленен
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
