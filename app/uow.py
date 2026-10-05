@@ -7,6 +7,7 @@ from app.repositories import (
     CourseRepository, 
     VideoRepository,
     UserRepository,
+    RefreshTokenRepository,
 )
 
 
@@ -17,12 +18,14 @@ class UnitOfWork:
         self.courses: CourseRepository | None = None
         self.video: VideoRepository | None = None
         self.user: UserRepository | None = None
+        self.refresh_tokens: RefreshTokenRepository | None = None
 
     def __enter__(self):
         self.session = self.session_factory()
         self.courses = CourseRepository(self.session)
         self.video = VideoRepository(self.session)
         self.user = UserRepository(self.session)
+        self.refresh_tokens = RefreshTokenRepository(self.session)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):

@@ -1,7 +1,9 @@
-from sqlalchemy import select
+from datetime import datetime
+
+from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
-from app.models import Course, Video, User
+from app.models import Course, Video, User, RefreshToken
 
 
 class CourseRepository:
@@ -70,4 +72,30 @@ class UserRepository:
     def get_by_login(self, login: str) -> User | None:
         stmt = select(User).where(User.login == login)
         return self.session.execute(stmt).scalar_one_or_none()
+
+    def get_by_id(self, user_id: int) -> User | None:
+        return self.session.get(User, user_id)
+
+
+class RefreshTokenRepository:
+    def __init__(self, session: Session):
+        self.session = session
+
+    def add(self, obj: RefreshToken) -> RefreshToken:
+        self.session.add(obj)
+        return obj
+
+    def get_by_hash(self, token_hash: str) -> RefreshToken | None:
+        stmt = select(RefreshToken).where(RefreshToken.token_hash == token_hash)
+        return self.session.execute(stmt).scalar_one_or_none()
+
+    def revoke(self, token_id: int, revoked_at: datetime) -> bool:
+        # Условие revoked_at IS NULL не даёт двум параллельным запросам
+        # обменять один и тот же токен дважды
+        stmt = (
+            update(RefreshToken)
+            .where(RefreshToken.id == token_id, RefreshToken.revoked_at.is_(None))
+            .values(revoked_at=revoked_at)
+        )
+        return self.session.execute(stmt).rowcount == 1
 

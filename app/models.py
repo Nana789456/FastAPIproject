@@ -55,3 +55,15 @@ class User(Base):
     accessible_videos = Column(Text)
     # created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     # updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+
+class RefreshToken(Base):
+    __tablename__ = 'refresh_token'
+
+    id = Column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
+    # Храним только хеш: утечка БД не должна давать рабочие токены
+    token_hash = Column(String(64), unique=True, index=True, nullable=False)
+    expires_at = Column(DateTime(timezone=True), nullable=False)
+    revoked_at = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
