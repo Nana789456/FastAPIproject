@@ -57,13 +57,21 @@ class User(Base):
     # created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     # updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
+    # Реальная колонка, которая связана с course (есть в БД)
+    role_id: Mapped[int] = mapped_column(ForeignKey("role.id"))
+    # Прямая связь: одно видео принадлежит одному курсу, только для ORM (нет в БД)
+    role: Mapped["Role"] = relationship(back_populates="users")
+
 
 class Role(Base):
     __tablename__ = 'role'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(20))
-    description = Column(String(255))
+    name = Column(String(20), nullable=False, unique=True)
+    description = Column(String(255), nullable=True)
+
+    # Обратная связь (один курс содержит много видео), только для ORM (нет в БД)
+    users: Mapped[List["User"]] = relationship(back_populates="role")
 
 
 class RefreshToken(Base):

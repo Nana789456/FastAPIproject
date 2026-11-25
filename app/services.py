@@ -103,6 +103,7 @@ class VideoService:
                     file_path=file_path,
                     course_id=course_obj.id,
                 )
+
                 uow.video.add(video)
                 uow.commit()
                 uow.session.refresh(video)
