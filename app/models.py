@@ -5,10 +5,11 @@ from datetime import datetime, timezone
 from typing import List
 
 from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
+from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
+
 
 
 class Course(Base):
@@ -59,6 +60,10 @@ class User(Base):
 
 class Role(Base):
     __tablename__ = 'role'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(20))
+    description = Column(String(255))
 
 
 class RefreshToken(Base):

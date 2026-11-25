@@ -5,7 +5,7 @@ from sqlalchemy import select
 
 from app.crud import _delete_file, _store_video_file, build_video_file_response
 from app.config import settings
-from app.models import Course, Video, User, RefreshToken
+from app.models import Course, Video, User, Role, RefreshToken
 from app.schemas import Token
 from app.security import (
     create_access_token,

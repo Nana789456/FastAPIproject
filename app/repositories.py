@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
-from app.models import Course, Video, User, RefreshToken
+from app.models import Course, Video, User, Role, RefreshToken
 
 
 class CourseRepository:
@@ -75,6 +75,22 @@ class UserRepository:
 
     def get_by_id(self, user_id: int) -> User | None:
         return self.session.get(User, user_id)
+
+
+class RoleRepository:
+    def __init__(self, session: Session):
+        self.session = session
+
+    def add(self, obj: Role) -> Role:
+        self.session.add(obj)
+        return obj
+
+    def get_by_name(self, role_name: str) -> Role | None:
+        stmt = select(Role).where(Role.name == role_name)
+        return self.session.execute(stmt).scalar_one_or_none()
+
+    def get_by_id(self, role_id: int) -> Role | None:
+        return self.session.get(Role, role_id)        
 
 
 class RefreshTokenRepository:
